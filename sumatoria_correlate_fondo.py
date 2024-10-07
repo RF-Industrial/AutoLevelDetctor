@@ -16,10 +16,10 @@ def buscar_y_abrir_archivos(fInit,fStep,n,fSample,nSamples,vSound):
     fs = 959000 / (2**(fSample + 1))
 
     #directorio_raiz = f"./ECO-GPRS/Compu/3/{fInit}_{fStep}_{n}_{fSample}_{nSamples}"
-    directorio_raiz = f"./ECO-GPRS/FONDO/{fInit}_{fStep}_{n}_{fSample}_{nSamples}"
+    directorio_raiz = f"./ECO-GPRS/Domingo/{fInit}_{fStep}_{n}_{fSample}_{nSamples}"
     #ECO-GPRS\FONDO
     archivos = os.listdir(directorio_raiz)
-    archivos_g = [d for d in archivos if d.startswith('X')]
+    archivos_g = [d for d in archivos if d.startswith('fondo3')]
   
 
     chirp_data =  generar_senal_senoidal(fInit,fStep,n,2**(fSample - 6))
@@ -53,9 +53,9 @@ def buscar_y_abrir_archivos(fInit,fStep,n,fSample,nSamples,vSound):
     print (indice_max,correlate[indice_max])
     plt.axvline(x=fondo, color='r', linestyle='--', label=f'Nivel = {round(fondo, 2)} m')
     plt.legend()
-    #plt.plot(  tiempo, suma)
+    plt.plot(  tiempo, suma)
     #plt.plot(  long_Onda_n + fondo - long_Onda/2 , chirp_data )
-    #plt.plot(  tiempo, correlate)
+    plt.plot(  tiempo, correlate)
     plt.xlabel('Distancia (m)')
     plt.ylabel('Amplitud')
     
@@ -68,4 +68,4 @@ def buscar_y_abrir_archivos(fInit,fStep,n,fSample,nSamples,vSound):
 
    
 
-buscar_y_abrir_archivos(2,2,3,9,6000,352.63)  #2_2_3_9_6000
+buscar_y_abrir_archivos(2,2,3,9,6000,384.83)  #352.63)  #2_2_3_9_6000

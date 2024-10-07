@@ -18,7 +18,7 @@ def buscar_y_abrir_archivos(fInit,fStep,n,fSample,nSamples):
     fs = int ( 959000 / (2**(fSample + 1)))
     
 
-    directorio_raiz = f"./ECO-GPRS/CUPLA/{fInit}_{fStep}_{n}_{fSample}_{nSamples}"
+    directorio_raiz = f"./ECO-GPRS/Domingo/{fInit}_{fStep}_{n}_{fSample}_{nSamples}"
 
     archivos = os.listdir(directorio_raiz)
     archivos_g = [d for d in archivos if d.startswith('cupla')]
@@ -50,19 +50,19 @@ def buscar_y_abrir_archivos(fInit,fStep,n,fSample,nSamples):
         #plt.plot( audio_data2)
 
     #suma = suma[int(1000/DivisorFrec):int(10000/DivisorFrec)] 
-    suma = suma[900:6000] 
+    suma = suma[900//DivisorFrec:] 
 
     
 
     chirp_data =  generar_senal_senoidal(fInit,fStep,n,2**(fSample - 6))
 
-    correlate =   np.abs( np.correlate(suma,chirp_data,mode="same") ) / 100
+    correlate =   ( np.correlate(suma,chirp_data,mode="same") ) / 100 #np.abs
 
-    windows_len = int(80/DivisorFrec)
+    windows_len = int(80//DivisorFrec)
 
     envolvente = np.convolve(correlate, np.ones(windows_len + 1), 'valid') / windows_len + 1
 
-    envolvente = np.pad(envolvente, (0, windows_len), mode='constant', constant_values=0)
+    envolvente = np.pad(envolvente, (0, windows_len), mode='constant', constant_values=0)  - 1
     #peine = 0
 
     def peinificar (start,step,envolvente):
@@ -84,8 +84,8 @@ def buscar_y_abrir_archivos(fInit,fStep,n,fSample,nSamples):
 
 
 
-    for i in range(300, 501):
-        for j in range(350,450): 
+    for i in range(300//DivisorFrec, 501//DivisorFrec):
+        for j in range(300//DivisorFrec,450): 
             peine_ , valid_indices_ = peinificar(i,j,envolvente)
 
             if (peine_ > peine):
@@ -95,11 +95,11 @@ def buscar_y_abrir_archivos(fInit,fStep,n,fSample,nSamples):
                 paso = j
 
 
-    paso = 366
-    print(f"Velocidad del sonido = {round( 18.4 / (paso / fs),2)}",  paso , init)
+    #paso = 366
+    print(f"Velocidad del sonido = {round( 18.8 / (paso / fs),2)}",  paso , init)
 
-    peine , valid_indices = peinificar(400,366,envolvente)
-    plt.plot(  suma)
+    peine , valid_indices = peinificar(init,paso,envolvente)
+    #plt.plot(  suma)
     plt.plot(  chirp_data)
     plt.plot(  correlate)
     plt.plot(  envolvente)
